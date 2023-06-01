@@ -34,3 +34,16 @@ def test_light_color_xy():
 
 def test_scenes():
     assert hue.scenes[0].type == 'scene'
+
+
+def test_grouped_light_type():
+    assert hue.grouped_lights[0].type == 'grouped_light'
+
+
+def test_grouped_light_brightness():
+    assert type(hue.grouped_lights[0].brightness) == float
+    hue.grouped_lights[0].on = True
+    hue.grouped_lights[0].brightness = 70.0
+    # Rounding error
+    assert hue.grouped_lights[0].brightness - 70.0 < 1
+    hue.grouped_lights[0].on = False

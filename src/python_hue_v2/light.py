@@ -7,20 +7,19 @@ class Light:
     def __init__(self, bridge: Bridge, light_id_v2: str):
         self.bridge = bridge
         self.light_id: str = light_id_v2
-        self._on: bool
 
     def _get(self) -> dict:
         return self.bridge.get_light(self.light_id)
 
-    def _set(self, light_property: str, key_value: dict) -> List[dict]:
-        return self.bridge.set_light(self.light_id, light_property, key_value)
+    def _set(self, light_property_name: str, property_value: dict) -> List[dict]:
+        return self.bridge.set_light(self.light_id, light_property_name, property_value)
 
     @property
     def data(self) -> dict:
         return self._get()
 
     @property
-    def on(self):
+    def on(self) -> bool:
         data = self._get()
         return data['on']['on']
 

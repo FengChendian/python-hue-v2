@@ -81,8 +81,8 @@ class Bridge:
         """
         return self._get(self._light_category)
 
-    def set_light(self, light_id_v2, light_property, key_value: dict):
-        data = {light_property: key_value}
+    def set_light(self, light_id_v2, light_property_name, property_value: dict):
+        data = {light_property_name: property_value}
         return self._put_by_id(self._light_category, light_id_v2, data)
 
     def get_scenes(self) -> List[dict]:
@@ -91,8 +91,8 @@ class Bridge:
     def get_scene(self, scene_id) -> dict:
         return self._get_by_id(self._scene_category, scene_id)
 
-    def set_scene(self, scene_id, scene_property: str, data: Union[list, dict]):
-        return self._put_by_id(self._scene_category, scene_id, {scene_property: data})
+    def set_scene(self, scene_id, scene_property: str, property_value: Union[list, dict]):
+        return self._put_by_id(self._scene_category, scene_id, {scene_property: property_value})
 
     def create_scene(self, properties: dict) -> list:
         return self._post(self._scene_category, properties)
@@ -112,6 +112,22 @@ class Bridge:
     def get_zone(self, zone_id: str) -> dict:
         return self._get_by_id(self._zone_category, zone_id)
 
+    def get_bridge_homes(self) -> List[dict]:
+        return self._get(self._bridge_category)
+
+    def get_bridge_home(self, bridge_home_id: str) -> dict:
+        return self._get_by_id(self._bridge_category, bridge_home_id)
+
+    def get_grouped_lights(self) -> List[dict]:
+        return self._get(self._grouped_light_category)
+
+    def get_grouped_light(self, grouped_light_id: str) -> dict:
+        return self._get_by_id(self._grouped_light_category, grouped_light_id)
+
+    def set_grouped_light_service(self, grouped_light_id: str, property_name: str, property_value: dict) -> dict:
+        return self._put_by_id(self._grouped_light_category, grouped_light_id,
+                               properties={property_name: property_value})
+
     def get_devices(self):
         return self._get(self._device_category)
 
@@ -121,7 +137,7 @@ class Bridge:
     def get_bridge(self):
         return self._get(self._bridge_category)
 
-    def get_bridge_by_id(self, id_) -> dict:
+    def get_bridge_by_id(self, id_: str) -> dict:
         """
         Get bridge info by its id
         :param id_: https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_bridge__id__get

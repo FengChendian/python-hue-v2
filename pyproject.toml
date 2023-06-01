@@ -28,9 +28,9 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/unknown/python-hue-v2#readme"
-Issues = "https://github.com/unknown/python-hue-v2/issues"
-Source = "https://github.com/unknown/python-hue-v2"
+Documentation = "https://github.com/FengChendian/python-hue-v2#readme"
+Issues = "https://github.com/FengChendian/python-hue-v2/issues"
+Source = "https://github.com/FengChendian/python-hue-v2"
 
 [tool.hatch.version]
 path = "src/python_hue_v2/__about__.py"

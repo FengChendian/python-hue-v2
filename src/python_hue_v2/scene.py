@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Literal
 from .bridge import Bridge
 
 
@@ -58,13 +58,25 @@ class Scene:
     def _get(self) -> dict:
         return self.bridge.get_scene(self.scene_id)
 
-    def _set(self, scene_property: str, data: Union[list, dict]) -> List[dict]:
-        return self.bridge.set_scene(self.scene_id, scene_property, data)
+    def _set(self, scene_property_name: str, property_value: Union[list, dict]) -> List[dict]:
+        return self.bridge.set_scene(self.scene_id, scene_property_name, property_value)
 
     @property
     def data(self) -> SceneGet:
         return SceneGet(self._get())
-    
+
+    @property
+    def data_dict(self) -> dict:
+        """
+        Get raw properties by get
+        :return: One SceneGet data in properties. Because 1 id get 1 item. https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene__id__get
+        """
+        return self._get()
+
+    def recall(self, action: Literal['active', 'dynamic_palette', 'static']):
+        # {'status': 'active'} is failed
+        self._set('recall', {'action': action})
+
     @property
     def id(self) -> str:
         return self.scene_id
@@ -76,10 +88,6 @@ class Scene:
     @actions.setter
     def actions(self, action_items: List[dict]):
         self._set('actions', action_items)
-
-    @property
-    def recall(self) -> dict:
-        return self._get()['recall']
 
     @property
     def meta_data(self) -> dict:
