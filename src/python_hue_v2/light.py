@@ -15,7 +15,7 @@ class Light:
         return self.bridge.set_light(self.light_id, light_property_name, property_value)
 
     @property
-    def data(self) -> dict:
+    def data_dict(self) -> dict:
         return self._get()
 
     @property

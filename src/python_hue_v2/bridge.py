@@ -9,7 +9,7 @@ class Bridge:
     def __init__(self, ip_address: str, hue_application_key: str):
         self.ip_address = ip_address
         self.hue_application_key = hue_application_key
-        self.hue_application_key_str = 'hue-application-key'
+        self.hue_application_key_name = 'hue-application-key'
         # url
         self.base_url = f'https://{self.ip_address}/clip/v2/resource'
 
@@ -21,8 +21,6 @@ class Bridge:
         self._grouped_light_category = 'grouped_light'
         self._device_category = 'device'
         self._bridge_category = 'bridge'
-
-        self.device_list: list = []
         # requests.Request.
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -43,31 +41,31 @@ class Bridge:
 
     def _get_by_id(self, category: str, item_id: str) -> dict:
         url = f'{self.base_url}/{category}/{item_id}'
-        res = requests.get(url, headers={self.hue_application_key_str: self.hue_application_key}, verify=False).json()
+        res = requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False).json()
         return self._convert_to_data(res)[0]
 
     def _get(self, category: str) -> List[dict]:
         url = f'{self.base_url}/{category}'
-        res = requests.get(url, headers={self.hue_application_key_str: self.hue_application_key}, verify=False).json()
+        res = requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False).json()
         return self._convert_to_data(res)
 
     def _put_by_id(self, category: str, item_id: str, properties: dict) -> dict:
         url = f'{self.base_url}/{category}/{item_id}'
         res = requests.put(url, data=json.dumps(properties),
-                           headers={self.hue_application_key_str: self.hue_application_key},
+                           headers={self.hue_application_key_name: self.hue_application_key},
                            verify=False).json()
         return self._convert_to_data(res)[0]
 
     def _post(self, category: str, properties: dict) -> list:
         url = f'{self.base_url}/{category}'
         res = requests.post(url, data=json.dumps(properties),
-                            headers={self.hue_application_key_str: self.hue_application_key},
+                            headers={self.hue_application_key_name: self.hue_application_key},
                             verify=False).json()
         return self._convert_to_data(res)
 
     def _delete_by_id(self, category: str, item_id: str) -> list:
         url = f'{self.base_url}/{category}/{item_id}'
-        res = requests.delete(url, headers={self.hue_application_key_str: self.hue_application_key},
+        res = requests.delete(url, headers={self.hue_application_key_name: self.hue_application_key},
                               verify=False).json()
         return self._convert_to_data(res)
 

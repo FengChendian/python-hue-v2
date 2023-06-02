@@ -13,6 +13,10 @@ class GroupedLight:
         return self.bridge.set_grouped_light_service(self.grouped_light_id, property_name, property_value)
 
     @property
+    def data_dict(self) -> dict:
+        return self._get()
+
+    @property
     def on(self) -> bool:
         return self._get()['on']['on']
 
