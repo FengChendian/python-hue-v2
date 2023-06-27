@@ -6,6 +6,7 @@ class SceneGet:
     """
     SceneGet Wrapper in https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene_get
     """
+
     def __init__(self, scene_get_data: dict):
         self._scene_get_data = scene_get_data
         self.actions = [ActionGet(action_data) for action_data in self._scene_get_data['actions']]
@@ -51,6 +52,7 @@ class Scene:
     """
     Hue Scene Control Class
     """
+
     def __init__(self, bridge: Bridge, scene_id_v2: str):
         self.bridge = bridge
         self.scene_id: str = scene_id_v2
@@ -143,6 +145,7 @@ class ActionGet:
     def color_temperature(self) -> dict:
         return self._action['color_temperature']
 
+
 # class Action:
 #     def __init__(self, action: dict):
 #         self.action: dict = action
@@ -150,3 +153,7 @@ class ActionGet:
 #     @property
 #     def on(self) -> bool:
 #         return self.action['on']['on']
+
+# class ActionPost:
+#     def __init__(self, ):
+#         pass
