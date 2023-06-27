@@ -1,1 +1,1 @@
-from python_hue_v2 import Hue
+from src.python_hue_v2 import Hue

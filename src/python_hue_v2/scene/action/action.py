@@ -1,39 +1,38 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 class On:
     def __init__(self, on: Dict):
-        self.on: bool = on['on']
+        self.on: Optional[bool] = on['on']
 
 
 class Dimming:
     def __init__(self, dimming: Dict):
-        self.brightness: float = dimming['brightness']
+        self.brightness: Optional[float] = dimming['brightness']
 
 
 class ColorXY:
     def __init__(self, xy: dict):
-        self.x: float = xy['x']
-        self.y: float = xy['y']
+        self.x: Optional[float] = xy.get('x')
+        self.y: Optional[float] = xy.get('y')
 
 
 class Color:
-    def __init__(self, color: Dict):
-        self.xy: ColorXY = color['xy']
+    def __init__(self, color: dict):
+        self.xy: ColorXY = ColorXY(color.get('xy'))
 
 
 class ColorTemperature:
     def __init__(self, color_temperature: dict):
-        self.mirek = color_temperature['mirek']
+        self.mirek: Optional[int] = color_temperature['mirek']
 
 
 class GradientPointGet:
     def __init__(self, gradient_point_get: dict):
-        self.color: Color = Color(gradient_point_get['color'])
+        self.color: Color = Color(gradient_point_get.get('color'))
 
 
 class Gradient:
-
     def __init__(self, gradient: dict):
         self.points: List[GradientPointGet] = [GradientPointGet(point) for point in gradient['points']]
         self.mode: str = gradient['mode']
@@ -46,15 +45,37 @@ class Effects:
 
 class Dynamics:
     def __init__(self, dynamics: dict):
-        self.duration: int = dynamics['duration']
+        self.duration: Optional[int] = dynamics['duration']
 
 
 class Action:
     def __init__(self, action: Dict):
-        self.on = On(action['on'])
-        self.dimming = Dimming(action['dimming'])
-        self.color = Color(action['color'])
-        self.color_temperature = ColorTemperature(action['color_temperature'])
-        self.gradient = Gradient(action['gradient'])
-        self.effects = Effects(action['effects'])
-        self.dynamics = Dynamics(action['dynamics'])
+        self.action_dict: dict = action
+        self.keys = action.keys()
+
+        self.on = On(action['on']) if 'on' in self.keys else None
+        self.dimming = Dimming(action['dimming']) if 'dimming' in self.keys else None
+        self.color = Color(action['color']) if 'color' in self.keys else None
+        self.color_temperature = (
+            ColorTemperature(action['color_temperature']) if 'color_temperature' in self.keys else None
+        )
+        self.gradient = Gradient(action['gradient']) if 'gradient' in self.keys else None
+        self.effects = Effects(action['effects']) if 'effects' in self.keys else None
+        self.dynamics = Dynamics(action['dynamics']) if 'dynamics' in self.keys else None
+
+    @classmethod
+    def create_by_parameters(
+        cls,
+        on: bool = False,
+        brightness: float = 50.0,
+        color_x: float = 0.5,
+        color_y: float = 0.5,
+        mirek=200,
+    ):
+        action = {
+            'on': {'on': on},
+            'dimming': {'brightness': brightness},
+            'color': {'xy': {'x': color_x, 'y': color_y}},
+            'color_temperature': {'mirek': mirek}
+        }
+        return cls(action)

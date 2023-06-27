@@ -1,9 +1,9 @@
 import time
 
-from python_hue_v2.bridge import Bridge
-from python_hue_v2.light import Light
-from python_hue_v2.scene import Scene
-from python_hue_v2.grouped_light import GroupedLight
+from .bridge import Bridge
+from .light import Light
+from .scene import Scene
+from .grouped_light import GroupedLight
 from typing import List
 
 

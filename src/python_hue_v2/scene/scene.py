@@ -1,5 +1,6 @@
 from typing import List, Union, Literal
-from .bridge import Bridge
+from ..bridge import Bridge
+from .action import ActionGet
 
 
 class SceneGet:
@@ -9,7 +10,7 @@ class SceneGet:
 
     def __init__(self, scene_get_data: dict):
         self._scene_get_data = scene_get_data
-        self.actions = [ActionGet(action_data) for action_data in self._scene_get_data['actions']]
+        self.actions: list = [ActionGet(action_data) for action_data in self._scene_get_data['actions']]
 
     @property
     def type(self) -> str:
@@ -48,6 +49,14 @@ class SceneGet:
         return self._scene_get_data['auto_dynamic']
 
 
+class ScenePut:
+    def __init__(self, scene_put_data: dict) -> None:
+        self._scene_put_data = scene_put_data
+
+    def to_dict(self) -> dict:
+        return self._scene_put_data
+
+
 class Scene:
     """
     Hue Scene Control Class
@@ -62,6 +71,9 @@ class Scene:
 
     def _set(self, scene_property_name: str, property_value: Union[list, dict]) -> List[dict]:
         return self.bridge.set_scene(self.scene_id, scene_property_name, property_value)
+    
+    def get(self) -> SceneGet:
+        return SceneGet(self._get())
 
     @property
     def data(self) -> SceneGet:
@@ -71,11 +83,12 @@ class Scene:
     def data_dict(self) -> dict:
         """
         Get raw properties by get
-        :return: One SceneGet data in properties. Because 1 id get 1 item. https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene__id__get
+        :return: One SceneGet data in properties. Because 1 id get 1 item.
+        https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene__id__get
         """
         return self._get()
 
-    def recall(self, action: Literal['active', 'dynamic_palette', 'static']):
+    def recall(self, action: Literal['active', 'dynamic_palette', 'static'] = 'active'):
         # {'status': 'active'} is failed
         self._set('recall', {'action': action})
 
@@ -84,8 +97,8 @@ class Scene:
         return self.scene_id
 
     @property
-    def actions(self) -> list:
-        return self._get()['actions']
+    def actions(self) -> ActionGet:
+        return self.get().actions
 
     @actions.setter
     def actions(self, action_items: List[dict]):
@@ -114,46 +127,3 @@ class Scene:
     @property
     def type(self) -> dict:
         return self._get()['type']
-
-
-class ActionGet:
-    def __init__(self, action_get_data: dict):
-        self._target: dict = action_get_data['target']
-        self._action: dict = action_get_data['action']
-
-    @property
-    def target_rid(self) -> str:
-        return self._target['rid']
-
-    @property
-    def target_rtype(self) -> str:
-        return self._target['rtype']
-
-    @property
-    def on(self) -> bool:
-        return self._action['on']['on']
-
-    @property
-    def color(self):
-        return self._action['color']
-
-    @property
-    def color_xy(self) -> dict:
-        return self._action['color']['xy']
-
-    @property
-    def color_temperature(self) -> dict:
-        return self._action['color_temperature']
-
-
-# class Action:
-#     def __init__(self, action: dict):
-#         self.action: dict = action
-#
-#     @property
-#     def on(self) -> bool:
-#         return self.action['on']['on']
-
-# class ActionPost:
-#     def __init__(self, ):
-#         pass

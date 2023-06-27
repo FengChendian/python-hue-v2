@@ -1,6 +1,6 @@
 import time
 
-from python_hue_v2 import Hue, Light, BridgeFinder, Scene
+from src.python_hue_v2 import Hue, Light, BridgeFinder, Scene
 
 finder = BridgeFinder()
 time.sleep(1)
