@@ -82,6 +82,7 @@ def test_recall_scene():
     test_scene.recall()
     time.sleep(3)
     groups = hue.grouped_lights
+    test_group = None
     for group in groups:
         if group.owner.rid == test_scene.group.rid:
             test_group = group
@@ -101,7 +102,6 @@ def test_delete_scene():
 
     hue.bridge.delete_scene(test_scene.id)
     assert 1
-
 
 # def test_grouped_light_type():
 #     assert hue.grouped_lights[0].type == 'grouped_light'

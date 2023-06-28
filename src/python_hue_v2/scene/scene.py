@@ -4,6 +4,7 @@ from .action import ActionGet, ActionPost
 from .meta_data import Metadata
 from .group import Group
 
+
 class SceneGet:
     """
     SceneGet Data, ref in https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene_get
@@ -70,12 +71,12 @@ class ScenePost:
 
     @classmethod
     def create_by_parameters(
-        cls,
-        actions: List[Union[dict, ActionPost]],
-        name: str,
-        group_rid: str,
-        group_rtype: str,
-        palette: Optional[dict] = None,
+            cls,
+            actions: List[Union[dict, ActionPost]],
+            name: str,
+            group_rid: str,
+            group_rtype: str,
+            palette: Optional[dict] = None,
     ):
         if type(actions[0]) is dict:
             action_dicts = actions

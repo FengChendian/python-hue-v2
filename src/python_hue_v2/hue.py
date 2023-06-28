@@ -26,7 +26,7 @@ class Hue:
             GroupedLight(self.bridge, grouped_light_data['id'])
             for grouped_light_data in self.bridge.get_grouped_lights()
         ]
-    
+
     @property
     def rooms(self) -> List[Room]:
         return [Room(bridge=self.bridge, room_id_v2=room_data['id']) for room_data in self.bridge.get_rooms()]
@@ -39,15 +39,5 @@ class Hue:
         else:
             raise TypeError("Properties must be ScenePost or dict")
 
-
-if __name__ == '__main__':
-    hue = Hue('ecb5fa8549cd.local', '7K-IbBzEV3wZoXkTlSh6HyLTALLFsYrxCjIcW1o9')
-    scenes = hue.scenes
-    for scene in scenes:
-        print(scene.data_dict)
-    scenes[2].recall(action='static')
-    print()
-    time.sleep(1)
-    grouped_lights = hue.grouped_lights
-    grouped_lights[0].on = False
-    # hue.lights[0].on = False
+    def delete_scene(self, scene_id):
+        self.bridge.delete_scene(scene_id=scene_id)

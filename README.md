@@ -1,6 +1,7 @@
 # Python Hue V2
 
-Python library to control the Philips Hue lighting system for Hue-V2 API.
+Python library to control the Philips Hue lighting system
+for [Hue-V2](https://developers.meethue.com/develop/hue-api-v2/api-reference/) API.
 
 ## Features
 
@@ -29,8 +30,11 @@ for light in lights:
     light.on = True
     light.brightness = 80.0
 ```
+
 ### Scenes
+
 You can get scenes from hue bridge.
+
 ```python
 from python_hue_v2 import Hue
 
@@ -41,14 +45,61 @@ for scene in scenes:
     print(scene.id)
     print(scene.data_dict)
 ```
+
 Recall scene using `active`, `dynamic_palette`, `static`.
+
 ```python
 scene = scenes[0]
 scene.recall(action='active')
 ```
 
+If you want create one scene with light actions in a room:
+
+```python
+from python_hue_v2.scene import ActionPost, ScenePost
+
+light_id = []
+lights = hue.lights
+for light in lights:
+    light_id.append(light.light_id)
+
+actions = []
+for rid in light_id:
+    actions.append(
+        ActionPost.create_by_parameters(
+            target_rid=rid,
+            target_rtype='light',
+            on=True,
+            brightness=50,
+            color_xy=(0.1, 0.3)  # xy color tuple
+            # mirek=200 % or use mirek
+        )
+    )
+
+# Get all rooms, may be empty
+rooms = hue.rooms
+
+# ScenePost should have a group property, Here we bind with a room
+
+# refer to https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene_post
+# Group associated with this Scene. All services in the group are part of this scene. 
+# If the group is changed the scene is update (e.g. light added/removed)
+scene_post: ScenePost = ScenePost.create_by_parameters(
+    actions=actions, name='test', group_rid=rooms[0].id, group_rtype="room"
+)
+hue.create_scene(scene_post)
+```
+
+Also, you can delete scene by id.
+
+```python
+hue.delete_scene('scene-id-example')
+```
+
 ### Grouped Light
-Get Lights from hue.
+
+Get group Lights from hue.
+
 ```python
 from python_hue_v2 import Hue
 
@@ -57,10 +108,13 @@ grouped_lights = hue.grouped_lights
 
 for group in grouped_lights:
     print(group.type)
+    group.on = True
 ```
 
 ## Low Level Control
+
 Also, you can use basic function in bridge class.
+
 ```python
 import time
 from python_hue_v2 import Hue

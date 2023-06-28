@@ -1,5 +1,4 @@
-from ast import Tuple
-from typing import Optional, Union
+from typing import Optional, Union, Tuple
 from ..target import Target
 from .action import Action
 
@@ -24,7 +23,7 @@ class ActionPost:
         target_rtype : str,
         on: bool = False,
         brightness: float = 50.0,
-        color_xy: Union[Tuple, None] = (0.5, 0.5),
+        color_xy: Union[Tuple[float, float], None] = (0.5, 0.5),
         mirek: Optional[int] = None,
     ):
         action_post_data = {}
