@@ -74,6 +74,11 @@ bridge.set_light('id', light_property_name='on', property_value={'on': True})
 
 bridge.get_zones()
 ```
+
+## Attention
+
+Some API may be de deprecated When major version updates.
+
 ## TODO
 
-- Zones, Rooms Control Class
+- Zones Control Class

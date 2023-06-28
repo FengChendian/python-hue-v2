@@ -1,15 +1,16 @@
 import time
 
+from .room import Room
 from .bridge import Bridge
 from .light import Light
-from .scene import Scene
+from .scene import Scene, ScenePost
 from .grouped_light import GroupedLight
-from typing import List
+from typing import List, Union
 
 
 class Hue:
     def __init__(self, ip_address: str, hue_application_key: str):
-        self.bridge = Bridge('ecb5fa8549cd.local', '7K-IbBzEV3wZoXkTlSh6HyLTALLFsYrxCjIcW1o9')
+        self.bridge = Bridge(ip_address=ip_address, hue_application_key=hue_application_key)
 
     @property
     def lights(self) -> List[Light]:
@@ -21,8 +22,22 @@ class Hue:
 
     @property
     def grouped_lights(self) -> List[GroupedLight]:
-        return [GroupedLight(self.bridge, grouped_light_data['id']) for grouped_light_data in
-                self.bridge.get_grouped_lights()]
+        return [
+            GroupedLight(self.bridge, grouped_light_data['id'])
+            for grouped_light_data in self.bridge.get_grouped_lights()
+        ]
+    
+    @property
+    def rooms(self) -> List[Room]:
+        return [Room(bridge=self.bridge, room_id_v2=room_data['id']) for room_data in self.bridge.get_rooms()]
+
+    def create_scene(self, properties: Union[dict, ScenePost]) -> list:
+        if type(properties) is dict:
+            return self.bridge.create_scene(properties)
+        elif isinstance(properties, ScenePost):
+            return self.bridge.create_scene(properties.data_dict)
+        else:
+            raise TypeError("Properties must be ScenePost or dict")
 
 
 if __name__ == '__main__':

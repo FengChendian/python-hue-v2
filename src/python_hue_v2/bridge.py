@@ -6,6 +6,10 @@ from typing import List, Union
 
 
 class Bridge:
+    """
+    Basic communication class with hue bridge. All Data should be dict or json. \\
+    Don't import another hue device class to this file.
+    """
     def __init__(self, ip_address: str, hue_application_key: str):
         self.ip_address = ip_address
         self.hue_application_key = hue_application_key
@@ -34,6 +38,7 @@ class Bridge:
 
     @staticmethod
     def _convert_to_data(res: dict) -> List[dict]:
+        print(res)
         if res['errors']:
             raise ConnectionError(res['errors'])
         else:
@@ -42,7 +47,7 @@ class Bridge:
     def _get_by_id(self, category: str, item_id: str) -> dict:
         url = f'{self.base_url}/{category}/{item_id}'
         res = requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False).json()
-        return self._convert_to_data(res)[0]
+        return self._convert_to_data(res)[0] # data length should be 1, so return first element [0]
 
     def _get(self, category: str) -> List[dict]:
         url = f'{self.base_url}/{category}'
@@ -92,7 +97,7 @@ class Bridge:
     def set_scene(self, scene_id, scene_property: str, property_value: Union[list, dict]):
         return self._put_by_id(self._scene_category, scene_id, {scene_property: property_value})
 
-    def create_scene(self, properties: dict) -> list:
+    def create_scene(self, properties) -> list:
         return self._post(self._scene_category, properties)
 
     def delete_scene(self, scene_id: str) -> list:
@@ -103,6 +108,9 @@ class Bridge:
 
     def get_room(self, room_id: str) -> dict:
         return self._get_by_id(self._room_category, room_id)
+    
+    def set_room(self, room_id, room_property: str, property_value: Union[list, dict]):
+        return self._put_by_id(self._room_category, room_id, {room_property: property_value})
 
     def get_zones(self) -> List[dict]:
         return self._get(self._zone_category)

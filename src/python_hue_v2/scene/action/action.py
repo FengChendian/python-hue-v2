@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 
 class On:
@@ -49,8 +49,8 @@ class Dynamics:
 
 
 class Action:
-    def __init__(self, action: Dict):
-        self.action_dict: dict = action
+    def __init__(self, action: dict):
+        self._data_dict: dict = action
         self.keys = action.keys()
 
         self.on = On(action['on']) if 'on' in self.keys else None
@@ -68,14 +68,20 @@ class Action:
         cls,
         on: bool = False,
         brightness: float = 50.0,
-        color_x: float = 0.5,
-        color_y: float = 0.5,
-        mirek=200,
+        color_xy: Union[tuple, None] = (0.5, 0.5),
+        mirek: Optional[int] = None,
     ):
         action = {
             'on': {'on': on},
             'dimming': {'brightness': brightness},
-            'color': {'xy': {'x': color_x, 'y': color_y}},
-            'color_temperature': {'mirek': mirek}
         }
+        if mirek is not None:
+            action['color_temperature'] = {'mirek': mirek}
+        elif color_xy is not None:
+            action['color'] = {'xy': {'x': color_xy[0], 'y': color_xy[1]}}
+
         return cls(action)
+
+    @property
+    def data_dict(self) -> dict:
+        return self._data_dict

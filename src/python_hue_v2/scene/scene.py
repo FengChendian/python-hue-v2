@@ -1,16 +1,22 @@
-from typing import List, Union, Literal
+from typing import List, Optional, Union, Literal
 from ..bridge import Bridge
-from .action import ActionGet
-
+from .action import ActionGet, ActionPost
+from .meta_data import Metadata
+from .group import Group
 
 class SceneGet:
     """
-    SceneGet Wrapper in https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene_get
+    SceneGet Data, ref in https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene_get
     """
 
     def __init__(self, scene_get_data: dict):
-        self._scene_get_data = scene_get_data
-        self.actions: list = [ActionGet(action_data) for action_data in self._scene_get_data['actions']]
+        self._data_dict = scene_get_data
+        self._meta_data = Metadata(scene_get_data['metadata'])
+        self.actions: list = [ActionGet(action_data) for action_data in self._data_dict['actions']]
+
+    @property
+    def data_dict(self) -> dict:
+        return self._data_dict
 
     @property
     def type(self) -> str:
@@ -18,43 +24,83 @@ class SceneGet:
         Get data type
         :return: always get 'scene'
         """
-        return self._scene_get_data['type']
+        return self._data_dict['type']
 
     @property
     def id(self) -> str:
-        return self._scene_get_data['id']
+        return self._data_dict['id']
 
     @property
     def id_v1(self) -> str:
-        return self._scene_get_data['id_v1']
+        return self._data_dict['id_v1']
 
     @property
-    def metadata(self) -> dict:
-        return self._scene_get_data['metadata']
+    def metadata(self) -> Metadata:
+        return self._meta_data
 
     @property
     def group(self) -> dict:
-        return self._scene_get_data['group']
+        return self._data_dict['group']
 
     @property
     def palette(self) -> dict:
-        return self._scene_get_data['palette']
+        return self._data_dict['palette']
 
     @property
     def speed(self) -> float:
-        return self._scene_get_data['speed']
+        return self._data_dict['speed']
 
     @property
     def auto_dynamic(self) -> bool:
-        return self._scene_get_data['auto_dynamic']
+        return self._data_dict['auto_dynamic']
 
 
 class ScenePut:
     def __init__(self, scene_put_data: dict) -> None:
         self._scene_put_data = scene_put_data
 
-    def to_dict(self) -> dict:
+    @property
+    def data_dict(self) -> dict:
         return self._scene_put_data
+
+
+class ScenePost:
+    def __init__(self, scene_post_data: dict) -> None:
+        self._data_dict: dict = scene_post_data
+
+    @classmethod
+    def create_by_parameters(
+        cls,
+        actions: List[Union[dict, ActionPost]],
+        name: str,
+        group_rid: str,
+        group_rtype: str,
+        palette: Optional[dict] = None,
+    ):
+        if type(actions[0]) is dict:
+            action_dicts = actions
+        elif isinstance(actions[0], ActionPost):
+            action_dicts = [i.data_dict for i in actions]
+        else:
+            raise TypeError('Actions must be dict or ActionPost')
+
+        post_data = {
+            'actions': action_dicts,
+            'metadata': {
+                'name': name,
+            },
+            'group': {
+                'rid': group_rid,
+                'rtype': group_rtype,
+            },
+        }
+        if palette:
+            post_data['palette'] = palette
+        return cls(post_data)
+
+    @property
+    def data_dict(self) -> dict:
+        return self._data_dict
 
 
 class Scene:
@@ -64,14 +110,14 @@ class Scene:
 
     def __init__(self, bridge: Bridge, scene_id_v2: str):
         self.bridge = bridge
-        self.scene_id: str = scene_id_v2
+        self._scene_id: str = scene_id_v2
 
     def _get(self) -> dict:
-        return self.bridge.get_scene(self.scene_id)
+        return self.bridge.get_scene(self._scene_id)
 
     def _set(self, scene_property_name: str, property_value: Union[list, dict]) -> List[dict]:
-        return self.bridge.set_scene(self.scene_id, scene_property_name, property_value)
-    
+        return self.bridge.set_scene(self._scene_id, scene_property_name, property_value)
+
     def get(self) -> SceneGet:
         return SceneGet(self._get())
 
@@ -94,7 +140,7 @@ class Scene:
 
     @property
     def id(self) -> str:
-        return self.scene_id
+        return self._scene_id
 
     @property
     def actions(self) -> ActionGet:
@@ -105,12 +151,12 @@ class Scene:
         self._set('actions', action_items)
 
     @property
-    def meta_data(self) -> dict:
-        return self._get()['metadata']
+    def meta_data(self) -> Metadata:
+        return self.data.metadata
 
     @property
-    def group(self) -> dict:
-        return self._get()['group']
+    def group(self) -> Group:
+        return Group(self.data_dict['group'])
 
     @property
     def status(self) -> dict:
@@ -125,5 +171,5 @@ class Scene:
         return self._get()['auto_dynamic']
 
     @property
-    def type(self) -> dict:
+    def type(self) -> str:
         return self._get()['type']
