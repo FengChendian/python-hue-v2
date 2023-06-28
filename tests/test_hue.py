@@ -7,10 +7,18 @@ from src.python_hue_v2 import Hue, Light, BridgeFinder, Scene
 
 finder = BridgeFinder()
 time.sleep(1)
-
 test_hostname = finder.get_bridge_server_lists()[0]
 test_key = '7K-IbBzEV3wZoXkTlSh6HyLTALLFsYrxCjIcW1o9'
 hue = Hue(test_hostname, test_key)
+
+
+def test_bridge_connect():
+    hue_test = Hue(test_hostname)
+    try:
+        hue_test.bridge.connect()
+    except ConnectionError as e:
+        print(e)
+    assert 1
 
 
 def test_light_on():

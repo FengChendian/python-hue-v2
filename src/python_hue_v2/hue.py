@@ -5,11 +5,11 @@ from .bridge import Bridge
 from .light import Light
 from .scene import Scene, ScenePost
 from .grouped_light import GroupedLight
-from typing import List, Union
+from typing import List, Union, Optional
 
 
 class Hue:
-    def __init__(self, ip_address: str, hue_application_key: str):
+    def __init__(self, ip_address: str, hue_application_key: Optional[str] = None):
         self.bridge = Bridge(ip_address=ip_address, hue_application_key=hue_application_key)
 
     @property

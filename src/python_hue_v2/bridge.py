@@ -10,7 +10,8 @@ class Bridge:
     Basic communication class with hue bridge. All Data should be dict or json. \\
     Don't import another hue device class to this file.
     """
-    def __init__(self, ip_address: str, hue_application_key: str):
+
+    def __init__(self, ip_address: str, hue_application_key: Union[str, None]):
         self.ip_address = ip_address
         self.hue_application_key = hue_application_key
         self.hue_application_key_name = 'hue-application-key'
@@ -28,6 +29,16 @@ class Bridge:
         # requests.Request.
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+    def connect(self):
+        generate_command = {"devicetype": "app_name#instance_name", "generateclientkey": True}
+        res: dict = \
+            requests.post(f'https://{self.ip_address}/api', data=json.dumps(generate_command), verify=False).json()[0]
+        if 'error' in res.keys():
+            raise ConnectionError(res['error'])
+        else:
+            self.hue_application_key = res['success']['username']
+        return self.hue_application_key
+
     @staticmethod
     def _get_response_error(r_json: dict):
         return r_json['errors']
@@ -38,7 +49,6 @@ class Bridge:
 
     @staticmethod
     def _convert_to_data(res: dict) -> List[dict]:
-        print(res)
         if res['errors']:
             raise ConnectionError(res['errors'])
         else:
@@ -47,7 +57,7 @@ class Bridge:
     def _get_by_id(self, category: str, item_id: str) -> dict:
         url = f'{self.base_url}/{category}/{item_id}'
         res = requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False).json()
-        return self._convert_to_data(res)[0] # data length should be 1, so return first element [0]
+        return self._convert_to_data(res)[0]  # data length should be 1, so return first element [0]
 
     def _get(self, category: str) -> List[dict]:
         url = f'{self.base_url}/{category}'
@@ -108,7 +118,7 @@ class Bridge:
 
     def get_room(self, room_id: str) -> dict:
         return self._get_by_id(self._room_category, room_id)
-    
+
     def set_room(self, room_id, room_property: str, property_value: Union[list, dict]):
         return self._put_by_id(self._room_category, room_id, {room_property: property_value})
 

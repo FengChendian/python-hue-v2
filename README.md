@@ -23,6 +23,10 @@ host_name = finder.get_bridge_server_lists()[0]  # Here we use first Hue Bridge
 # or hue = Hue('ip address','app-key')
 hue = Hue(host_name, 'hue app key')  # create Hue instance
 
+# If you don't have hue-app-key, press the button and call bridge.connect() (this only needs to be run a single time)
+# hue = Hue(host_name)
+# app_key = hue.bridge.connect() # you can get app_key and storage on disk
+
 lights = hue.lights
 
 for light in lights:
@@ -79,7 +83,7 @@ for rid in light_id:
 # Get all rooms, may be empty
 rooms = hue.rooms
 
-# ScenePost should have a group property, Here we bind with a room
+# ScenePost should have a group property, here we bind with a room
 
 # refer to https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_scene_post
 # Group associated with this Scene. All services in the group are part of this scene. 
