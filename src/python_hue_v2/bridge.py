@@ -54,34 +54,44 @@ class Bridge:
         else:
             return res['data']
 
+    @staticmethod
+    def _check_status_code(res: requests.Response):
+        if res.status_code != 403:
+            return res.json()
+        else:
+            raise ConnectionRefusedError()
+
     def _get_by_id(self, category: str, item_id: str) -> dict:
         url = f'{self.base_url}/{category}/{item_id}'
-        res = requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False).json()
+        res = self._check_status_code(
+            requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False))
         return self._convert_to_data(res)[0]  # data length should be 1, so return first element [0]
 
     def _get(self, category: str) -> List[dict]:
         url = f'{self.base_url}/{category}'
-        res = requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False).json()
+        res = self._check_status_code(
+            requests.get(url, headers={self.hue_application_key_name: self.hue_application_key}, verify=False))
         return self._convert_to_data(res)
 
     def _put_by_id(self, category: str, item_id: str, properties: dict) -> dict:
         url = f'{self.base_url}/{category}/{item_id}'
-        res = requests.put(url, data=json.dumps(properties),
-                           headers={self.hue_application_key_name: self.hue_application_key},
-                           verify=False).json()
+        res = self._check_status_code(requests.put(url, data=json.dumps(properties),
+                                                   headers={self.hue_application_key_name: self.hue_application_key},
+                                                   verify=False))
         return self._convert_to_data(res)[0]
 
     def _post(self, category: str, properties: dict) -> list:
         url = f'{self.base_url}/{category}'
-        res = requests.post(url, data=json.dumps(properties),
-                            headers={self.hue_application_key_name: self.hue_application_key},
-                            verify=False).json()
+        res = self._check_status_code(requests.post(url, data=json.dumps(properties),
+                                                    headers={self.hue_application_key_name: self.hue_application_key},
+                                                    verify=False))
         return self._convert_to_data(res)
 
     def _delete_by_id(self, category: str, item_id: str) -> list:
         url = f'{self.base_url}/{category}/{item_id}'
-        res = requests.delete(url, headers={self.hue_application_key_name: self.hue_application_key},
-                              verify=False).json()
+        res = self._check_status_code(
+            requests.delete(url, headers={self.hue_application_key_name: self.hue_application_key},
+                            verify=False))
         return self._convert_to_data(res)
 
     def get_light(self, light_id: str) -> dict:
