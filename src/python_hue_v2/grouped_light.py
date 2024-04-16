@@ -2,6 +2,7 @@ from .bridge import Bridge
 
 
 class Owner:
+    """ Owner data class for the grouped light owner property """
     def __init__(self, data: dict):
         self._rid: str = data['rid']
         self._rtype: str = data['rtype']
@@ -28,14 +29,11 @@ class GroupedLight:
         return self.bridge.get_grouped_light(self.grouped_light_id)
 
     def _set(self, properties: dict) -> dict:
-        """_set is equal to HTTP PUT
-
-        Arguments:
-            property_name -- Property key like type, on, dimming, color_temperature, etc.
-            property_value -- Value belong to key, it should be dict, refer to https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_grouped_light__id__put
-
-        Returns:
-            Response data, ResourceIdentifierPut, should be a dict for one id, not list
+        """
+        _set is equal to HTTP PUT
+        :param properties: it is a dict, including type, on, dimming, color_temperature,etc. Please refer to
+        https://developers.meethue.com/develop/hue-api-v2/api-reference/#resource_grouped_light__id__put
+        :return: Response data, ResourceIdentifierPut, should be a dict for one id, not list
         """
         return self.bridge.set_grouped_light_service(self.grouped_light_id, properties)
 

@@ -113,8 +113,8 @@ grouped_lights = hue.grouped_lights
 for group in grouped_lights:
     print(group.type)
     # group.on = True
-    group.set_state(True, 100, None) # Feature in 
-    group.set_state(on=True, brightness=100, duration_ms=1)
+    group.set_state(True, 100, None) 
+    group.set_state(on=True, brightness=100, duration_ms=1) # Feature in version 2.0.1
     
 ```
 
