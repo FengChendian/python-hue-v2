@@ -51,14 +51,14 @@ class GroupedLight:
     def on(self, value: bool):
         self._set({'on': {'on': value}})
 
-    def set_state(self, on_state_value: bool, brightness: float = None, duration_ms: int = None):
+    def set_state(self, on: bool, brightness: float = None, duration_ms: int = None):
         """
         Set the state of the grouped light
-        :param on_state_value: Boolean value to change the state of the grouped light
+        :param on: Boolean value to change the state of the grouped light
         :param brightness: Group light brightness value
         :param duration_ms: duration in dynamics
         """
-        properties = {'on': {'on': on_state_value}}
+        properties = {'on': {'on': on}}
         if duration_ms:
             properties['dynamics'] = {'duration': duration_ms}
         if brightness:

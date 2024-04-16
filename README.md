@@ -114,7 +114,7 @@ for group in grouped_lights:
     print(group.type)
     # group.on = True
     group.set_state(True, 100, None) # Feature in 
-    group.set_state(on_state_value=True, brightness=100, duration_ms=1)
+    group.set_state(on=True, brightness=100, duration_ms=1)
     
 ```
 
