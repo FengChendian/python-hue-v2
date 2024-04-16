@@ -26,7 +26,7 @@ class GroupedLight:
     def _get(self):
         return self.bridge.get_grouped_light(self.grouped_light_id)
 
-    def _set(self, property_name: str, property_value: dict) -> dict:
+    def _set(self, properties: dict) -> dict:
         """_set is equal to HTTP PUT
 
         Arguments:
@@ -36,7 +36,7 @@ class GroupedLight:
         Returns:
             Response data, ResourceIdentifierPut, should be a dict for one id, not list
         """
-        return self.bridge.set_grouped_light_service(self.grouped_light_id, property_name, property_value)
+        return self.bridge.set_grouped_light_service(self.grouped_light_id, properties)
 
     @property
     def data_dict(self) -> dict:
@@ -48,7 +48,15 @@ class GroupedLight:
 
     @on.setter
     def on(self, value: bool):
-        self._set('on', {'on': value})
+        self._set({'on': {'on': value}})
+
+    def set_state(self, value: bool, brightness: float = None, duration_ms: int = None):
+        properties = {'on': {'on': value}}
+        if duration_ms:
+            properties['dynamics'] = {'duration': duration_ms}
+        if brightness:
+            properties['dimming'] = {'brightness': brightness}
+        self._set(properties)
 
     @property
     def type(self) -> str:
@@ -60,7 +68,7 @@ class GroupedLight:
 
     @brightness.setter
     def brightness(self, value: float):
-        self._set('dimming', {'brightness': value})
+        self._set({'dimming': {'brightness': value}})
 
     @property
     def owner(self) -> Owner:
