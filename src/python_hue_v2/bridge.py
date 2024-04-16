@@ -150,9 +150,9 @@ class Bridge:
     def get_grouped_light(self, grouped_light_id: str) -> dict:
         return self._get_by_id(self._grouped_light_category, grouped_light_id)
 
-    def set_grouped_light_service(self, grouped_light_id: str, property_name: str, property_value: dict) -> dict:
+    def set_grouped_light_service(self, grouped_light_id: str, properties: dict) -> dict:
         return self._put_by_id(self._grouped_light_category, grouped_light_id,
-                               properties={property_name: property_value})
+                               properties=properties)
 
     def get_devices(self):
         return self._get(self._device_category)
