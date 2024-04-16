@@ -19,6 +19,7 @@ class GroupedLight:
     """API to manage grouped light service, just one group
     Only supports HTTP PUT and GET method.
     """
+
     def __init__(self, bridge: Bridge, grouped_light_id: str):
         self.bridge = bridge
         self.grouped_light_id: str = grouped_light_id
@@ -50,8 +51,14 @@ class GroupedLight:
     def on(self, value: bool):
         self._set({'on': {'on': value}})
 
-    def set_state(self, value: bool, brightness: float = None, duration_ms: int = None):
-        properties = {'on': {'on': value}}
+    def set_state(self, on_state_value: bool, brightness: float = None, duration_ms: int = None):
+        """
+        Set the state of the grouped light
+        :param on_state_value: Boolean value to change the state of the grouped light
+        :param brightness: Group light brightness value
+        :param duration_ms: duration in dynamics
+        """
+        properties = {'on': {'on': on_state_value}}
         if duration_ms:
             properties['dynamics'] = {'duration': duration_ms}
         if brightness:

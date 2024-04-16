@@ -112,12 +112,20 @@ grouped_lights = hue.grouped_lights
 
 for group in grouped_lights:
     print(group.type)
-    group.on = True
+    # group.on = True
+    group.set_state(True, 100, None) # Feature in 
+    group.set_state(on_state_value=True, brightness=100, duration_ms=1)
+    
 ```
 
 ## Low Level Control
 
-Also, you can use basic function in bridge class.
+> Low level function may be changed when update
+
+You can use some basic functions in this library. 
+
+For example, you can use `get_lights`,`set_light` or other low level control functions to implement
+some custom functions.
 
 ```python
 import time
@@ -136,6 +144,8 @@ bridge.get_zones()
 ## Attention
 
 Some API may be de deprecated When major version updates.
+
+- Grouped light API will be changed after version `2.0.0`
 
 ## TODO
 
