@@ -1,7 +1,7 @@
 from typing import List, Optional, Union, Literal
 from ..bridge import Bridge
 from .action import ActionGet, ActionPost
-from .meta_data import Metadata
+from .meta_data import MetaData
 from .group import Group
 
 
@@ -12,7 +12,7 @@ class SceneGet:
 
     def __init__(self, scene_get_data: dict):
         self._data_dict = scene_get_data
-        self._meta_data = Metadata(scene_get_data['metadata'])
+        self._meta_data = MetaData(scene_get_data['metadata'])
         self.actions: list = [ActionGet(action_data) for action_data in self._data_dict['actions']]
 
     @property
@@ -36,7 +36,7 @@ class SceneGet:
         return self._data_dict['id_v1']
 
     @property
-    def metadata(self) -> Metadata:
+    def metadata(self) -> MetaData:
         return self._meta_data
 
     @property
@@ -152,7 +152,7 @@ class Scene:
         self._set('actions', action_items)
 
     @property
-    def meta_data(self) -> Metadata:
+    def meta_data(self) -> MetaData:
         return self.data.metadata
 
     @property
