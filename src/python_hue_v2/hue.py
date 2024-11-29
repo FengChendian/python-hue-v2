@@ -7,6 +7,10 @@ from .scene import Scene, ScenePost
 from .grouped_light import GroupedLight
 from typing import List, Union, Optional
 
+import logging
+log = logging.getLogger(__name__)
+
+
 
 class Hue:
     def __init__(self, ip_address: str, hue_application_key: Optional[str] = None):

@@ -4,6 +4,9 @@ import requests
 import urllib3
 from typing import List, Union
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class Bridge:
     """

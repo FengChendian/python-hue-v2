@@ -1,4 +1,6 @@
 from .bridge import Bridge
+import logging
+log = logging.getLogger(__name__)
 
 
 class Owner:

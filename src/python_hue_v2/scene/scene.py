@@ -4,6 +4,8 @@ from .action import ActionGet, ActionPost
 from .meta_data import MetaData
 from .group import Group
 
+import logging
+log = logging.getLogger(__name__)
 
 class SceneGet:
     """
