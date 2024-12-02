@@ -6,6 +6,11 @@ from .light import Light
 from .scene import Scene, ScenePost
 from .grouped_light import GroupedLight
 from typing import List, Union, Optional
+from .zone.zone import Zone
+
+import logging
+log = logging.getLogger(__name__)
+
 
 
 class Hue:
@@ -30,6 +35,10 @@ class Hue:
     @property
     def rooms(self) -> List[Room]:
         return [Room(bridge=self.bridge, room_id_v2=room_data['id']) for room_data in self.bridge.get_rooms()]
+
+    @property
+    def zones(self) -> List[Zone]:
+        return [Zone(bridge=self.bridge, zone_id_v2=zone_data['id']) for zone_data in self.bridge.get_zones()]
 
     def create_scene(self, properties: Union[dict, ScenePost]) -> list:
         if type(properties) is dict:

@@ -2,6 +2,10 @@ from typing import List
 from ..bridge import Bridge
 from .room_get import RoomGet
 
+import logging
+log = logging.getLogger(__name__)
+
+
 class Room:
     def __init__(self, bridge: Bridge, room_id_v2: str):
         self.bridge = bridge

@@ -3,6 +3,9 @@ import time
 from typing import List
 from zeroconf import ServiceBrowser, ServiceListener, Zeroconf
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class DeviceListener(ServiceListener):
     def __init__(self):

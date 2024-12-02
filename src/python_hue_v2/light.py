@@ -2,6 +2,10 @@ from typing import List
 
 from .bridge import Bridge
 
+import logging
+log = logging.getLogger(__name__)
+
+
 
 class Light:
     def __init__(self, bridge: Bridge, light_id_v2: str):

@@ -4,6 +4,9 @@ import requests
 import urllib3
 from typing import List, Union
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class Bridge:
     """
@@ -137,6 +140,9 @@ class Bridge:
 
     def get_zone(self, zone_id: str) -> dict:
         return self._get_by_id(self._zone_category, zone_id)
+    
+    def set_zone(self, zone_id: str, zone_property: str, property_value: Union[list, dict]):
+        return self._put_by_id(self._zone_category, zone_id, {zone_property: property_value})
 
     def get_bridge_homes(self) -> List[dict]:
         return self._get(self._bridge_category)
