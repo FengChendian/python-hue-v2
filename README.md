@@ -19,9 +19,9 @@ finder = BridgeFinder()
 time.sleep(1)  # wait for search
 # Get server by mdns
 host_name = finder.get_bridge_server_lists()[0]  # Here we use first Hue Bridge
-
+addresses = finder.get_bridge_addresses()
 # or hue = Hue('ip address','app-key')
-hue = Hue(host_name, 'hue app key')  # create Hue instance
+hue = Hue(addresses[0], 'hue app key')  # create Hue instance
 
 # If you don't have hue-app-key, press the button and call bridge.connect() (this only needs to be run a single time)
 # hue = Hue(host_name)

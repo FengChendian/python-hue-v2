@@ -1,3 +1,4 @@
+import socket
 import time
 
 from typing import List
@@ -41,12 +42,16 @@ class BridgeFinder:
     def get_bridge_server_lists(self) -> List[str]:
         name = [device.server for device in self.listener.devices.values()]
         return name
+    
+    def get_bridge_addresses(self) -> List[str]:
+        return [socket.inet_ntoa(addr) for device in self.listener.devices.values() for addr in device.addresses]
 
 
 if __name__ == '__main__':
     finder = BridgeFinder()
-    time.sleep(1)
+    time.sleep(3)
     print(finder.get_bridge_server_lists())
+    print(finder.get_bridge_addresses())
     try:
         input("Press enter to exit...\n\n")
     finally:
