@@ -146,7 +146,3 @@ bridge.get_zones()
 Some API may be de deprecated When major version updates.
 
 - Grouped light API will be changed after version `2.0.0`
-
-## TODO
-
-- Zones Control Class
