@@ -3,8 +3,8 @@ from typing import List
 from .bridge import Bridge
 
 import logging
-log = logging.getLogger(__name__)
 
+log = logging.getLogger(__name__)
 
 
 class Light:
@@ -15,7 +15,7 @@ class Light:
     def _get(self) -> dict:
         return self.bridge.get_light(self.light_id)
 
-    def _set(self, light_property_name: str, property_value: dict) -> List[dict]:
+    def _set(self, light_property_name: str, property_value: dict) -> dict:
         return self.bridge.set_light(self.light_id, light_property_name, property_value)
 
     @property
@@ -45,7 +45,7 @@ class Light:
 
     @color_xy.setter
     def color_xy(self, value: dict):
-        self._set('xy', value)
+        self._set('color', {'xy': value})
 
     @property
     def metadata(self) -> dict:
