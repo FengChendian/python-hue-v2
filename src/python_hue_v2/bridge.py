@@ -111,6 +111,9 @@ class Bridge:
         data = {light_property_name: property_value}
         return self._put_by_id(self._light_category, light_id_v2, data)
 
+    def set_light_service(self, light_id: str, properties: dict) -> dict:
+        return self._put_by_id(self._light_category, light_id, properties=properties)
+
     def get_scenes(self) -> List[dict]:
         return self._get(self._scene_category)
 
