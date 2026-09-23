@@ -18,6 +18,20 @@ class Light:
     def _set(self, light_property_name: str, property_value: dict) -> dict:
         return self.bridge.set_light(self.light_id, light_property_name, property_value)
 
+    def set_state(self, on: bool, brightness: float = None, duration_ms: int = None):
+        """
+        Set the state of the light
+        :param on: Boolean value to change the state of the light
+        :param brightness: Light brightness value
+        :param duration_ms: duration in dynamics
+        """
+        properties = {'on': {'on': on}}
+        if duration_ms is not None:
+            properties['dynamics'] = {'duration': duration_ms}
+        if brightness is not None:
+            properties['dimming'] = {'brightness': brightness}
+        self.bridge.set_light_service(self.light_id, properties)
+
     @property
     def data_dict(self) -> dict:
         return self._get()
